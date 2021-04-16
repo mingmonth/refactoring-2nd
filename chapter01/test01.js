@@ -7,9 +7,9 @@ function playfor(aPerformance) {
   return plays[aPerformance.playID];
 }
 
-function amoutFor(aPerformance, play) {
+function amoutFor(aPerformance) {
   let result = 0;
-  switch (play.type) {
+  switch (playfor(aPerformance).type) {
     case "tragedy":
       result = 40000;
       if (aPerformance.audience > 30) {
@@ -24,7 +24,7 @@ function amoutFor(aPerformance, play) {
       result += 300 * aPerformance.audience;
       break;
     default:
-      throw new Error(`알 수 없는 장르: ${play.type}`);
+      throw new Error(`알 수 없는 장르: ${playfor(aPerformance).type}`);
   }
   return result;
 }
@@ -40,17 +40,14 @@ function statement(invoice) {
   }).format;
 
   for (let performance of invoice[0].performances) {
-    const play = playfor(performance); // 우변을 함수로 추출
-    let thisAmount = amoutFor(performance, play);
-
     volumeCredits += Math.max(performance.audience - 30, 0);
-    if ("comedy" === play.type)
+    if ("comedy" === playfor(performance).type)
       volumeCredits += Math.floor(performance.audience / 5);
 
-    result += `${play.name}: ${format(thisAmount / 100)} (${
-      performance.audience
-    }석)\n`;
-    totalAmount += thisAmount;
+    result += `${playfor(performance).name}: ${format(
+      amoutFor(performance) / 100
+    )} (${performance.audience}석)\n`;
+    totalAmount += amoutFor(performance);
   }
   result += `총액: ${format(totalAmount / 100)}\n`;
   result += `적립 포인트: ${volumeCredits}점\n`;
@@ -58,5 +55,5 @@ function statement(invoice) {
 }
 // 객체 형태일때 . 으로 접근 가능
 console.log(invoices[0].performances);
-result = statement(invoices, plays);
+result = statement(invoices);
 console.log(result);
