@@ -3,7 +3,9 @@ const fs = require("fs");
 const plays = JSON.parse(fs.readFileSync("./plays.json"));
 const invoices = JSON.parse(fs.readFileSync("./invocies.json"));
 
-function playfor(aPerformance) {}
+function playfor(aPerformance) {
+  return plays[aPerformance.playID];
+}
 
 function amoutFor(aPerformance, play) {
   let result = 0;
@@ -27,7 +29,7 @@ function amoutFor(aPerformance, play) {
   return result;
 }
 
-function statement(invoice, plays) {
+function statement(invoice) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
@@ -38,7 +40,7 @@ function statement(invoice, plays) {
   }).format;
 
   for (let performance of invoice[0].performances) {
-    const play = plays[performance.playID];
+    const play = playfor(performance); // 우변을 함수로 추출
     let thisAmount = amoutFor(performance, play);
 
     volumeCredits += Math.max(performance.audience - 30, 0);
