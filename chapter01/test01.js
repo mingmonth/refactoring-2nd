@@ -37,24 +37,26 @@ function amoutFor(aPerformance) {
   return result;
 }
 
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minumumFractionDigits: 2,
+  }).format(aNumber / 100);
+}
+
 function statement(invoice) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minumumFractionDigits: 2,
-  }).format;
-
   for (let performance of invoice[0].performances) {
     volumeCredits += volumeCreditsFor(performance);
-    result += `${playfor(performance).name}: ${format(
-      amoutFor(performance) / 100
-    )} (${performance.audience}석)\n`;
+    result += `${playfor(performance).name}: ${usd(amoutFor(performance))} (${
+      performance.audience
+    }석)\n`;
     totalAmount += amoutFor(performance);
   }
-  result += `총액: ${format(totalAmount / 100)}\n`;
+  result += `총액: ${usd(totalAmount)}\n`;
   result += `적립 포인트: ${volumeCredits}점\n`;
   return result;
 }
