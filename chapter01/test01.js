@@ -3,6 +3,8 @@ const fs = require("fs");
 const plays = JSON.parse(fs.readFileSync("./plays.json"));
 const invoices = JSON.parse(fs.readFileSync("./invocies.json"));
 
+function playfor(aPerformance) {}
+
 function amoutFor(aPerformance, play) {
   let result = 0;
   switch (play.type) {
@@ -37,16 +39,16 @@ function statement(invoice, plays) {
 
   for (let performance of invoice[0].performances) {
     const play = plays[performance.playID];
-    let result = amoutFor(performance, play);
+    let thisAmount = amoutFor(performance, play);
 
     volumeCredits += Math.max(performance.audience - 30, 0);
     if ("comedy" === play.type)
       volumeCredits += Math.floor(performance.audience / 5);
 
-    result += `${play.name}: ${format(result / 100)} (${
+    result += `${play.name}: ${format(thisAmount / 100)} (${
       performance.audience
     }석)\n`;
-    totalAmount += result;
+    totalAmount += thisAmount;
   }
   result += `총액: ${format(totalAmount / 100)}\n`;
   result += `적립 포인트: ${volumeCredits}점\n`;
