@@ -3,6 +3,14 @@ const fs = require("fs");
 const plays = JSON.parse(fs.readFileSync("./plays.json"));
 const invoices = JSON.parse(fs.readFileSync("./invocies.json"));
 
+function volumeCreditsFor(aPerformance) {
+  let volumeCredits = 0;
+  volumeCredits += Math.max(aPerformance.audience - 30, 0);
+  if ("comedy" === playfor(aPerformance).type)
+    volumeCredits += Math.floor(aPerformance.audience / 5);
+  return volumeCredits;
+}
+
 function playfor(aPerformance) {
   return plays[aPerformance.playID];
 }
@@ -40,10 +48,7 @@ function statement(invoice) {
   }).format;
 
   for (let performance of invoice[0].performances) {
-    volumeCredits += Math.max(performance.audience - 30, 0);
-    if ("comedy" === playfor(performance).type)
-      volumeCredits += Math.floor(performance.audience / 5);
-
+    volumeCredits += volumeCreditsFor(performance);
     result += `${playfor(performance).name}: ${format(
       amoutFor(performance) / 100
     )} (${performance.audience}석)\n`;
