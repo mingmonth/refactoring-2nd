@@ -5,18 +5,25 @@ const invoices = JSON.parse(fs.readFileSync("./invocies.json"));
 
 function statement(invoice) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
   for (let performance of invoice[0].performances) {
-    volumeCredits += volumeCreditsFor(performance);
     result += `${playfor(performance).name}: ${usd(amoutFor(performance))} (${
       performance.audience
     }석)\n`;
     totalAmount += amoutFor(performance);
   }
+
   result += `총액: ${usd(totalAmount)}\n`;
-  result += `적립 포인트: ${volumeCredits}점\n`;
+  result += `적립 포인트: ${totalVolumeCredits()}점\n`;
   return result;
+
+  function totalVolumeCredits() {
+    let volumeCredits = 0;
+    for (let performance of invoice[0].performances) {
+      volumeCredits += volumeCreditsFor(performance);
+    }
+    return volumeCredits;
+  }
 
   function volumeCreditsFor(aPerformance) {
     let volumeCredits = 0;
