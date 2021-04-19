@@ -4,8 +4,15 @@ const plays = JSON.parse(fs.readFileSync("./plays.json"));
 const invoices = JSON.parse(fs.readFileSync("./invocies.json"));
 
 function statement(invoice) {
-  let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
-  for (let performance of invoice[0].performances) {
+  const statementData = {};
+  statementData.customer = invoice[0].customer;
+  statementData.performances = invoice[0].performances;
+  return renderPlainText(statementData, invoice);
+}
+
+function renderPlainText(data, invoice) {
+  let result = `청구 내역 (고객명: ${data.customer})\n`;
+  for (let performance of data.performances) {
     result += `${playfor(performance).name}: ${usd(amoutFor(performance))} (${
       performance.audience
     }석)\n`;
