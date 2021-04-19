@@ -20,19 +20,21 @@ function statement(invoice) {
   }
 
   function totalAmount(data) {
-    let result = 0;
-    for (let performance of data.performances) {
-      result += performance.amount;
-    }
-    return result;
+    // let result = 0;
+    // for (let performance of data.performances) {
+    //   result += performance.amount;
+    // }
+    // return result;
+    return data.performances.reduce((total, p) => total + p.amount, 0);
   }
 
   function totalVolumeCredits(data) {
-    let result = 0;
-    for (let performance of data.performances) {
-      result += performance.volumeCredits;
-    }
-    return result;
+    // let result = 0;
+    // for (let performance of data.performances) {
+    //   result += performance.volumeCredits;
+    // }
+    // return result;
+    return data.performances.reduce((total, p) => total + p.volumeCredits, 0);
   }
 
   function volumeCreditsFor(aPerformance) {
