@@ -42,7 +42,7 @@ export default function createStatementData(invoice, plays) {
     ); // 공연료 계산기 생성
     const result = Object.assign({}, aPerformance);
     result.play = calculator.play;
-    result.amount = amountFor(result); // 공연료 계산
+    result.amount = calculator.amount();
     result.volumeCredits = volumeCreditsFor(result); // 적립 포인트 계산
     return result;
   }
@@ -68,7 +68,9 @@ export default function createStatementData(invoice, plays) {
   }
 
   function amountFor(aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance))
-      .amount;
+    return new PerformanceCalculator(
+      aPerformance,
+      playFor(aPerformance)
+    ).amount();
   }
 }
