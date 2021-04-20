@@ -1,3 +1,7 @@
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay);
+}
+
 class PerformanceCalculator {
   constructor(aPerformance, aPlay) {
     this.performance = aPerformance;
@@ -25,6 +29,14 @@ class PerformanceCalculator {
     }
     return result;
   }
+
+  volumeCreditsFor() {
+    let volumeCredits = 0;
+    volumeCredits += Math.max(this.performance.audience - 30, 0);
+    if ("comedy" === this.play.type)
+      volumeCredits += Math.floor(this.performance.audience / 5);
+    return volumeCredits;
+  }
 }
 
 export default function createStatementData(invoice, plays) {
@@ -36,14 +48,14 @@ export default function createStatementData(invoice, plays) {
   return result;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(
+    const calculator = createPerformanceCalculator(
       aPerformance,
       playFor(aPerformance)
-    ); // 공연료 계산기 생성
+    ); // 생성자 대신 팩터리 함수 이용
     const result = Object.assign({}, aPerformance);
     result.play = calculator.play;
     result.amount = calculator.amount();
-    result.volumeCredits = volumeCreditsFor(result); // 적립 포인트 계산
+    result.volumeCredits = calculator.volumeCreditsFor(); // 적립 포인트 계산
     return result;
   }
 
